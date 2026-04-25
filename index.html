@@ -4,44 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Pantun Budi - Baik Budi, Indah Bahasa</title>
-
-  <!-- Google Fonts for exactly matching the book cover cursive and providing fallback thick sans-serifs -->
+  
+  <!-- Only fetching the cursive font for the book cover -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:ital,wght@0,800;1,800&display=swap" rel="stylesheet">
-  
-  <style>
-    /* =========================================================
-       1. EXACT TYPOGRAPHY & GLOBAL VARIABLES
-       ========================================================= */
-    :root {
-      /* Force Helvetica Neue / SF Pro exact rendering */
-      --font-main: "Helvetica Neue", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", "Arial", sans-serif;
-      --font-cursive: "Great Vibes", cursive;
-      
-      --color-text-dark: #000000;
-      --color-text-maksud: #666666;
-      --color-card-bg: rgba(245, 249, 248, 0.85);
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 
-      /* Exact Pill Colors */
-      --pill-cyan-light: #bdf6e4;
+  <style>
+    /* =====================
+       GLOBAL & EXACT TYPOGRAPHY
+       ===================== */
+    :root {
+      /* Strictly enforcing the exact geometric sans-serif from the images */
+      --font-main: "Helvetica Neue", "SF Pro Display", Helvetica, Arial, sans-serif;
+      --text-main: #000000;
+      --text-maksud: #666666;
+      
+      /* Exact Pill Colors Eyedropped from Images */
+      --pill-nama: #a4f4d5;
       --pill-dark: #333333;
-      --pill-pink: #ec7c88;
-      --pill-gold: #b29977;
-      --pill-green: #71c675;
-      --pill-cyan: #69d9d9;
-      --pill-blue: #8688f2;
-      --pill-purple: #9c849e;
-      --pill-grey: #7a7a7a;
-      --pill-darkgrey: #3c3c3c;
+      --pill-1: #e97a84;
+      --pill-2: #bc9c79;
+      --pill-3: #75cb77;
+      --pill-4: #62d8d8;
+      --pill-5: #8c8ef3;
+      --pill-6: #9f829f;
+      --pill-7: #7a7a7a;
+      
+      /* Card Background */
+      --card-bg: rgba(246, 248, 249, 0.85);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: var(--font-main);
-      font-weight: 800; /* Extra Bold to match the exact thickness of your images */
-      color: var(--color-text-dark);
+      font-weight: 700; /* Forced bold everywhere */
+      color: var(--text-main);
       overflow: hidden;
       display: flex;
       justify-content: center;
@@ -49,478 +48,454 @@
       height: 100vh;
       width: 100vw;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      transition: background 0.8s ease;
-      background-size: cover;
-      background-position: center;
+      
+      /* Blurred natural background to mimic the Minecraft/outdoor setting */
+      background: #7ca388;
+      background-image: 
+        radial-gradient(circle at top right, #91c8d4 0%, transparent 40%),
+        radial-gradient(circle at bottom left, #5a7b5e 0%, transparent 50%),
+        radial-gradient(circle at bottom right, #6d8e72 0%, transparent 50%);
     }
 
-    /* Dynamic Background Blur Overlay */
-    .bg-overlay {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      backdrop-filter: blur(40px);
-      -webkit-backdrop-filter: blur(40px);
-      z-index: -1;
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    /* =========================================================
-       2. EXACT CARD DESIGN & MESH BLOBS
-       ========================================================= */
-    .presentation-wrapper {
+    /* =====================
+       PRESENTATION DECK & CARD
+       ===================== */
+    .deck-container {
       position: relative;
-      width: 95vw;
-      max-width: 1024px;
-      height: 85vh;
-      max-height: 768px;
+      width: 90vw;
+      max-width: 960px;
+      aspect-ratio: 4 / 3;
+      max-height: 85vh;
     }
 
-    .slide-card {
+    .slide {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: var(--color-card-bg);
-      border-radius: 48px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      padding: 40px 50px;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 45px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+      padding: clamp(30px, 5%, 50px) clamp(40px, 6%, 60px);
       opacity: 0;
-      transform: scale(0.95);
-      transition: opacity 0.4s ease, transform 0.4s ease;
+      transform: scale(0.98);
+      transition: opacity 0.3s ease, transform 0.3s ease;
       pointer-events: none;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
-    .slide-card.active {
+    .slide.active {
       opacity: 1;
       transform: scale(1);
       pointer-events: auto;
     }
 
-    /* Exact Internal Pastel Blobs (Mesh Gradient) */
-    .blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      z-index: -1;
-      opacity: 0.7;
+    /* =====================
+       PASTEL BLOBS (Inside Card)
+       ===================== */
+    .blob-layer {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
     }
-    .blob-cyan { background: #b2ebf2; width: 600px; height: 600px; top: -200px; left: -150px; }
-    .blob-pink { background: #fce4ec; width: 500px; height: 500px; top: -100px; right: -150px; }
-    .blob-yellow { background: #fff9c4; width: 550px; height: 550px; bottom: -200px; left: 20%; }
-    .blob-green { background: #e8f5e9; width: 600px; height: 600px; bottom: -250px; right: -150px; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.8; }
+    .blob-cyan { background: #e0faf4; width: 50%; height: 50%; top: -10%; left: -10%; }
+    .blob-yellow { background: #fdf5e2; width: 60%; height: 60%; top: 10%; right: -10%; }
+    .blob-pink { background: #fae1e8; width: 45%; height: 45%; bottom: -5%; right: 10%; }
+    .blob-green { background: #e3f5eb; width: 50%; height: 50%; bottom: -10%; left: 10%; }
 
-    /* =========================================================
-       3. EXACT COMPONENTS & TYPOGRAPHY
-       ========================================================= */
+    /* =====================
+       TYPOGRAPHY & COMPONENTS
+       ===================== */
+    .content-layer {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
     .pill {
       display: inline-block;
-      padding: 8px 24px;
-      border-radius: 9999px;
-      font-size: 1.6rem;
-      margin-bottom: 24px;
+      padding: 6px 22px;
+      border-radius: 50px;
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      margin-bottom: 25px;
       color: white;
-      line-height: 1.2;
+      white-space: nowrap;
     }
-
-    .pill-title { font-size: 2.2rem; padding: 12px 40px; margin-bottom: 20px; }
-    .pill-subtitle { font-size: 1.8rem; padding: 14px 48px; font-style: italic; }
     
-    .bg-cyan-light { background-color: var(--pill-cyan-light); color: var(--color-text-dark); }
-    .bg-dark { background-color: var(--pill-dark); color: white; }
-    .bg-pink { background-color: var(--pill-pink); }
-    .bg-gold { background-color: var(--pill-gold); }
-    .bg-green { background-color: var(--pill-green); }
-    .bg-cyan { background-color: var(--pill-cyan); }
-    .bg-blue { background-color: var(--pill-blue); }
-    .bg-purple { background-color: var(--pill-purple); }
-    .bg-grey { background-color: var(--pill-grey); }
-    .bg-darkgrey { background-color: var(--pill-darkgrey); }
+    .bg-nama { background: var(--pill-nama); color: #000; }
+    .bg-dark { background: var(--pill-dark); color: white; font-style: italic; }
+    .bg-1 { background: var(--pill-1); }
+    .bg-2 { background: var(--pill-2); }
+    .bg-3 { background: var(--pill-3); }
+    .bg-4 { background: var(--pill-4); }
+    .bg-5 { background: var(--pill-5); }
+    .bg-6 { background: var(--pill-6); }
+    .bg-7 { background: var(--pill-7); }
 
     .pantun-text {
-      font-size: 2.1rem;
+      font-size: clamp(1.4rem, 2.8vw, 2.1rem);
       font-style: italic;
       line-height: 1.5;
-      margin-bottom: 24px;
-      letter-spacing: -0.2px;
+      margin-bottom: 25px;
+      letter-spacing: 0.3px;
     }
 
     .maksud-label {
-      font-size: 1.9rem;
+      font-size: clamp(1.3rem, 2.5vw, 1.9rem);
       margin-bottom: 12px;
     }
 
     .maksud-box {
-      background: rgba(255, 255, 255, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.9);
-      padding: 30px 40px;
-      border-radius: 24px;
-      font-size: 1.45rem;
+      background: rgba(240, 244, 248, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      padding: clamp(20px, 4vw, 30px);
+      border-radius: 25px;
+      font-size: clamp(1.1rem, 2.2vw, 1.55rem);
       font-style: italic;
-      color: var(--color-text-maksud);
+      color: var(--text-maksud);
       text-align: center;
       line-height: 1.4;
       flex-grow: 1;
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     }
 
-    /* =========================================================
-       4. SPECIFIC SLIDES
-       ========================================================= */
-    /* Slide 1 Grid layout */
+    /* Watermarks */
+    .watermark {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(200px, 40vw, 350px);
+      opacity: 0.04;
+      z-index: 1;
+      pointer-events: none;
+      filter: grayscale(100%);
+    }
+
+    /* Slide 1 Layout */
     .s1-grid {
       display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 20px 24px;
+      grid-template-columns: max-content 1fr;
+      gap: 24px 20px;
       align-items: start;
-      margin-top: 40px;
+      margin-top: 30px;
       margin-left: 20px;
-      margin-bottom: 80px;
-    }
-    .s1-label {
-      background: var(--pill-cyan-light);
-      padding: 6px 20px;
-      border-radius: 9999px;
-      font-size: 1.8rem;
     }
     .s1-text {
-      font-size: 2.1rem;
+      font-size: clamp(1.3rem, 2.8vw, 2.1rem);
       line-height: 1.3;
-      letter-spacing: -0.5px;
-      padding-top: 4px;
+      padding-top: 8px;
     }
-    .s1-bottom {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
+    .s1-center {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      flex-grow: 1; gap: 20px; margin-top: 40px;
     }
 
-    /* Slide 2 Exact Book Mockup */
-    .s2-content { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; }
-    .s2-title { font-size: 2.2rem; margin-bottom: 30px; line-height: 1.2; letter-spacing: -0.5px; max-width: 90%; }
-    
-    .book-mockup {
-      width: 280px;
-      height: 400px;
-      background: linear-gradient(135deg, #f09819 0%, #ffc107 100%);
-      border-radius: 4px 12px 12px 4px;
-      box-shadow: inset 6px 0 12px rgba(0,0,0,0.1), 12px 16px 32px rgba(0,0,0,0.25);
-      position: relative;
-      overflow: hidden;
-      display: flex; flex-direction: column; align-items: center;
-      color: white;
+    /* Slide 2: Book Mockup */
+    .s2-title { font-size: clamp(1.5rem, 3vw, 2.3rem); text-align: center; margin-bottom: 25px; line-height: 1.3; }
+    .book-container { display: flex; justify-content: center; flex-grow: 1; align-items: center; }
+    .book {
+      width: clamp(200px, 35vw, 280px);
+      aspect-ratio: 2 / 3;
+      background: linear-gradient(135deg, #f39c12, #f1c40f);
+      border-radius: 5px 15px 15px 5px;
+      box-shadow: inset 5px 0 10px rgba(0,0,0,0.1), 10px 10px 20px rgba(0,0,0,0.2);
+      position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; color: white; border: 1px solid rgba(255,255,255,0.3);
     }
-    .book-mockup::before { content: ''; position: absolute; top:0; left: 10px; bottom: 0; width: 2px; background: rgba(255,255,255,0.4); z-index: 10; }
-    
-    .book-logo-sb { position: absolute; top: 12px; right: 12px; border: 2px solid #e23b24; padding: 2px; width: 35px; height: 35px; z-index: 5; background: white; border-radius: 4px; }
-    .book-logo-sb::after { content: 'S B'; display: block; color: #e23b24; font-size: 14px; font-weight: 900; line-height: 14px; letter-spacing: -1px; margin-top: 1px; }
-    .book-logo-sb::before { content: ''; position: absolute; top: 16px; left: 2px; right: 2px; height: 2px; background: #e23b24; }
-    
-    .book-top-text { font-family: "Arial", sans-serif; font-weight: bold; font-size: 7px; text-transform: uppercase; text-align: center; margin-top: 25px; z-index: 2; line-height: 1.3; letter-spacing: 0px; }
-    .book-cursive { font-family: var(--font-cursive); font-weight: 400; font-size: 3.5rem; line-height: 1; margin-top: 25px; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); z-index: 2; text-align: center; }
-    .book-author { font-size: 9px; font-style: italic; margin-top: 15px; z-index: 2; font-weight: 500; }
-    
-    .book-mountain { position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: #263b65; clip-path: polygon(0% 100%, 0% 50%, 15% 40%, 30% 60%, 50% 25%, 70% 55%, 100% 30%, 100% 100%); z-index: 1; }
-    .book-mountain-light { position: absolute; bottom: 0; left: 0; width: 100%; height: 35%; background: rgba(255,255,255,0.2); clip-path: polygon(0% 100%, 0% 60%, 20% 50%, 40% 70%, 60% 35%, 80% 65%, 100% 40%, 100% 100%); z-index: 1; filter: blur(3px); }
-    
-    .book-logo-kpm { position: absolute; bottom: 15px; left: 15px; z-index: 5; display: flex; align-items: center; gap: 4px; }
-    .book-logo-kpm-icon { width: 20px; height: 20px; background: radial-gradient(circle, #0e1e4a 40%, #c42621 41%); border-radius: 50%; border: 1px solid white;}
-    .book-logo-kpm-text { font-family: "Arial", sans-serif; font-size: 5px; line-height: 1; text-align: left; }
-    .book-arah { position: absolute; bottom: 4px; left: 15px; z-index: 5; font-size: 5px; font-family: "Arial", sans-serif; }
-    
-    .book-sticker { position: absolute; bottom: 15px; right: 10px; background: #ce1f2c; color: white; font-size: 11px; padding: 12px 4px; font-family: "Arial", sans-serif; font-weight: 900; line-height: 1; transform: rotate(-15deg); z-index: 5; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+    .book::before { content:''; position:absolute; left: 10px; top:0; bottom:0; width: 2px; background:rgba(255,255,255,0.4); z-index:5; }
+    .book-logo { position: absolute; top: 15px; right: 15px; width: 25px; height: 25px; background: white; color: #f39c12; font-size: 16px; display: flex; align-items: center; justify-content: center; font-style: italic; border-radius: 4px; z-index: 2;}
+    .book-top-text { text-align: center; font-size: 8px; margin-top: 25px; text-transform: uppercase; z-index: 2; line-height: 1.3; }
+    .book-title { font-family: 'Dancing Script', cursive; font-size: clamp(2rem, 4.5vw, 3.5rem); text-align: center; line-height: 1.1; margin-top: 25px; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); z-index: 2; font-weight: 700; }
+    .book-author { font-size: 9px; font-style: italic; text-align: center; margin-top: 15px; z-index: 2; }
+    .book-mountain { position: absolute; bottom: 0; width: 100%; height: 45%; background: #1a2b4c; clip-path: polygon(0 100%, 0 50%, 20% 30%, 40% 60%, 60% 20%, 80% 50%, 100% 30%, 100% 100%); z-index: 1; }
+    .book-cloud { position: absolute; bottom: 0; width: 100%; height: 45%; background: rgba(255,255,255,0.2); filter: blur(3px); clip-path: polygon(0 100%, 0 60%, 30% 40%, 50% 70%, 70% 30%, 100% 40%, 100% 100%); z-index: 1; }
+    .book-stamp { position: absolute; bottom: 15px; right: 10px; background: #c0392b; color: white; font-size: 9px; padding: 4px 6px; transform: rotate(-15deg); border-radius: 3px; z-index: 2; }
 
-    /* Lists for Slide 10 & 11 */
-    .list-title { font-size: 1.8rem; margin-bottom: 12px; }
-    ul.custom-list { list-style: none; padding-left: 35px; margin-bottom: 24px; }
-    ul.custom-list li { position: relative; font-size: 1.6rem; font-style: italic; color: var(--color-text-maksud); margin-bottom: 12px; line-height: 1.4; }
-    ul.custom-list li::before { content: '•'; position: absolute; left: -25px; color: var(--color-text-maksud); font-size: 1.2em; top: -2px; }
-    hr.divider { border: 0; height: 3px; background: #b8b8b8; margin: 15px 0 25px 0; border-radius: 2px; }
+    /* Slide 10 & 11 Lists */
+    .list-title { font-size: clamp(1.3rem, 2.6vw, 1.9rem); margin-bottom: 12px; }
+    ul.bullet-list { list-style: none; padding-left: 25px; margin-bottom: 25px; }
+    ul.bullet-list li { position: relative; font-size: clamp(1.2rem, 2.4vw, 1.7rem); font-style: italic; color: var(--text-maksud); margin-bottom: 15px; line-height: 1.4; }
+    ul.bullet-list li::before { content: '•'; position: absolute; left: -25px; color: var(--text-maksud); font-size: 1.5em; top: -3px; }
+    hr.divider { border: 0; height: 3px; background: #cccccc; margin: 0 0 25px 0; }
 
-    .thank-you-box { background: rgba(255, 255, 255, 0.8); padding: 24px 60px; border-radius: 9999px; font-size: 3.2rem; text-align: center; margin-top: auto; margin-bottom: 60px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); align-self: center; }
+    .thank-you { background: rgba(255, 255, 255, 0.9); padding: 25px 50px; border-radius: 50px; font-size: clamp(1.8rem, 3.5vw, 2.8rem); text-align: center; margin-top: auto; margin-bottom: 40px; align-self: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
 
-    /* Exact Subtext & Footers */
-    .subtext { position: absolute; bottom: 25px; left: 45px; font-size: 0.8rem; font-style: italic; color: #777; z-index: 10; font-weight: 800; }
-    .footer { position: fixed; bottom: 8px; left: 0; width: 100%; text-align: center; font-size: 0.85rem; font-style: italic; color: rgba(0, 0, 0, 0.6); padding: 0 10px; pointer-events: none; z-index: 10; font-weight: 800;}
+    /* Decorators & Footer */
+    .subtext { position: absolute; bottom: 15px; left: 45px; font-size: clamp(0.7rem, 1.4vw, 0.85rem); font-style: italic; color: #888; z-index: 10; }
+    .footer { position: fixed; bottom: 10px; left: 0; width: 100%; text-align: center; font-size: clamp(0.6rem, 1.2vw, 0.8rem); font-style: italic; color: rgba(0, 0, 0, 0.6); pointer-events: none; z-index: 10; }
 
-    /* Controls */
-    .nav-btn {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.8); border: none;
-      width: 50px; height: 50px; border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); cursor: pointer;
-      display: flex; justify-content: center; align-items: center; z-index: 20;
-      transition: all 0.2s;
-    }
-    .nav-btn:hover { background: #fff; transform: translateY(-50%) scale(1.05); }
-    .nav-btn.prev { left: -25px; }
-    .nav-btn.next { right: -25px; }
-    .nav-btn svg { width: 24px; height: 24px; fill: #333; }
-
-    /* Mobile Scaling */
-    @media (max-width: 800px) {
-      html { font-size: 12px; }
-      .slide-card { padding: 30px; }
-      .s1-grid { grid-template-columns: 1fr; gap: 8px; margin-left: 0; }
-      .nav-btn { display: none; } /* Hide on mobile, use swipe */
-    }
+    /* Navigation Overlay */
+    .nav-overlay { position: absolute; top: 0; height: 100%; width: 50%; z-index: 100; cursor: pointer; }
+    .nav-left { left: 0; }
+    .nav-right { right: 0; }
   </style>
 </head>
-<body id="body-bg" style="background-image: url('https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=1000&auto=format&fit=crop');">
-  <div class="bg-overlay"></div>
+<body>
 
-  <div class="presentation-wrapper">
+  <!-- Invisible Navigation Zones (Keeps UI exactly like the images) -->
+  <div class="nav-overlay nav-left" onclick="prevSlide()"></div>
+  <div class="nav-overlay nav-right" onclick="nextSlide()"></div>
+
+  <div class="deck-container">
     
-    <!-- SLIDE 1: INTRO -->
-    <div class="slide-card active">
-      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
-      
-      <div class="s1-grid">
-        <div class="s1-label">Nama:</div>
-        <div class="s1-text">Tan Guan Han, Loo Chin Siang,<br>Wee Ker Sheng & Yeow Jia Wei</div>
-        
-        <div class="s1-label">Kelas:</div>
-        <div class="s1-text">2H (2 Hijau)</div>
-        
-        <div class="s1-label">Sekolah:</div>
-        <div class="s1-text">SMJK Katholik</div>
-      </div>
-
-      <div class="s1-bottom">
-        <div class="pill bg-cyan-light pill-title">Pantun Budi</div>
-        <div class="pill bg-dark pill-subtitle">Baik Budi, Indah Bahasa</div>
-      </div>
-    </div>
-
-    <!-- SLIDE 2: BOOK COVER -->
-    <div class="slide-card">
-      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
-      
-      <div class="s2-content">
-        <div class="s2-title">Semua orang! Sila buka buku INI dan lihat<br>halaman sepuluh dan sebelas!</div>
-        
-        <div class="book-mockup">
-          <div class="book-logo-sb"></div>
-          <div class="book-top-text">Antologi Teks Komponen Sastera (Komsas)<br>Dalam Mata Pelajaran Bahasa Melayu<br>Tingkatan 2</div>
-          <div class="book-cursive">Baik Budi,<br>Indah Bahasa</div>
-          <div class="book-author">disunting oleh<br>Nor Azah Abd Aziz</div>
-          <div class="book-mountain-light"></div>
-          <div class="book-mountain"></div>
-          
-          <div class="book-logo-kpm">
-            <div class="book-logo-kpm-icon"></div>
-            <div class="book-logo-kpm-text">KEMENTERIAN<br>PENDIDIKAN<br>MALAYSIA</div>
-          </div>
-          <div class="book-arah">ARAH PENDIDIKAN SDN BHD</div>
-          
-          <div class="book-sticker">EDISI<br>MURID</div>
+    <!-- SLIDE 1 -->
+    <div class="slide active">
+      <div class="blob-layer"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div></div>
+      <div class="content-layer">
+        <div class="s1-grid">
+          <div class="pill bg-nama">Nama:</div>
+          <div class="s1-text">Tan Guan Han, Loo Chin Siang,<br>Wee Ker Sheng & Yeow Jia Wei</div>
+          <div class="pill bg-nama">Kelas:</div>
+          <div class="s1-text">2H (2 Hijau)</div>
+          <div class="pill bg-nama">Sekolah:</div>
+          <div class="s1-text">SMJK Katholik</div>
+        </div>
+        <div class="s1-center">
+          <div class="pill bg-nama" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); padding: 12px 35px;">Pantun Budi</div>
+          <div class="pill bg-dark" style="font-size: clamp(1.4rem, 3vw, 2.2rem); padding: 12px 35px;">Baik Budi, Indah Bahasa</div>
         </div>
       </div>
-      <div class="subtext">eh, kenapa you tengok sini? open lah!</div>
     </div>
 
-    <!-- SLIDE 3: PANTUN 1 -->
-    <div class="slide-card">
-      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
-      <div><span class="pill bg-pink">Pantun 1</span></div>
-      <div class="pantun-text">
-        Tenang-tenang air di laut,<br>
-        Sampan kolek mudik ke tanjung,<br>
-        Hati terkenang mulut menyebut.<br>
-        Budi yang baik rasa nak junjung.
+    <!-- SLIDE 2 -->
+    <div class="slide">
+      <div class="blob-layer"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div></div>
+      <div class="content-layer">
+        <div class="s2-title">Semua orang! Sila buka buku INI dan lihat<br>halaman sepuluh dan sebelas!</div>
+        <div class="book-container">
+          <div class="book">
+            <div class="book-logo">S</div>
+            <div class="book-top-text">ANTOLOGI TEKS KOMPONEN SASTERA (KOMSAS)<br>DALAM MATA PELAJARAN BAHASA MELAYU<br>TINGKATAN 2</div>
+            <div class="book-title">Baik Budi,<br>Indah Bahasa</div>
+            <div class="book-author">disunting oleh<br>Nor Azah Abd Aziz</div>
+            <div class="book-cloud"></div>
+            <div class="book-mountain"></div>
+            <div class="book-stamp">EDISI<br>MURID</div>
+          </div>
+        </div>
+        <div class="subtext">eh, kenapa you tengok sini? open lah!</div>
       </div>
-      <div class="maksud-label">Maksud:</div>
-      <div class="maksud-box">Pantun ini bermaksud menghargai jasa dan budi baik seseorang. Kebaikan tersebut sentiasa diingat, disebut-sebut, dan dijunjung tinggi sebagai tanda syukur serta penghormatan yang tidak luput dek zaman.</div>
     </div>
 
-    <!-- SLIDE 4: PANTUN 2 -->
-    <div class="slide-card">
-      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
-      <div><span class="pill bg-gold">Pantun 2</span></div>
-      <div class="pantun-text">
-        Yang kurik kundi,<br>
-        Yang merah saga;<br>
-        Yang baik budi,<br>
-        Yang indah bahasa.
+    <!-- SLIDE 3 -->
+    <div class="slide">
+      <div class="blob-layer"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div></div>
+      <div class="watermark">⛵</div>
+      <div class="content-layer">
+        <div><div class="pill bg-1">Pantun 1</div></div>
+        <div class="pantun-text">
+          Tenang-tenang air di laut,<br>
+          Sampan kolek mudik ke tanjung,<br>
+          Hati terkenang mulut menyebut.<br>
+          Budi yang baik rasa nak junjung.
+        </div>
+        <div class="maksud-label">Maksud:</div>
+        <div class="maksud-box">Pantun ini bermaksud menghargai jasa dan budi baik seseorang. Kebaikan tersebut sentiasa diingat, disebut-sebut, dan dijunjung tinggi sebagai tanda syukur serta penghormatan yang tidak luput dek zaman.</div>
       </div>
-      <div class="maksud-label">Maksud:</div>
-      <div class="maksud-box">Mutiara kata paling masyhur tentang jati diri masyarakat Melayu. Ia menekankan bahawa kekayaan budi pekerti dan kehalusan bahasa adalah ukuran sebenar nilai serta kemuliaan seseorang, melebihi rupa paras atau harta.</div>
     </div>
 
-    <!-- SLIDE 5: PANTUN 3 -->
-    <div class="slide-card">
-      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
-      <div><span class="pill bg-green">Pantun 3</span></div>
-      <div class="pantun-text">
-        Bunga melati bunga di darat,<br>
-        Bunga seroja di tepi kali;<br>
-        Hina besi kerana karat,<br>
-        Hina manusia tidak berbudi.
+    <!-- SLIDE 4 -->
+    <div class="slide">
+      <div class="blob-layer"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div></div>
+      <div class="watermark">🤲</div>
+      <div class="content-layer">
+        <div><div class="pill bg-2">Pantun 2</div></div>
+        <div class="pantun-text">
+          Yang kurik kundi,<br>
+          Yang merah saga;<br>
+          Yang baik budi,<br>
+          Yang indah bahasa.
+        </div>
+        <div class="maksud-label">Maksud:</div>
+        <div class="maksud-box">Mutiara kata paling masyhur tentang jati diri masyarakat Melayu. Ia menekankan bahawa kekayaan budi pekerti dan kehalusan bahasa adalah ukuran sebenar nilai serta kemuliaan seseorang, melebihi rupa paras atau harta.</div>
       </div>
-      <div class="maksud-label">Maksud:</div>
-      <div class="maksud-box">Pantun ini bermaksud maruah manusia terletak pada budinya. Tanpa sifat budi pekerti dan adab, seseorang akan dipandang hina dan tidak bernilai, sama seperti besi yang buruk kerana berkarat.</div>
     </div>
 
-    <!-- SLIDE 6: PANTUN 4 -->
-    <div class="slide-card">
-      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
-      <div><span class="pill bg-cyan">Pantun 4</span></div>
-      <div class="pantun-text">
-        Bunga cina di atas batu,<br>
-        Jatuh daunnya ke dalam ruang;<br>
-        Adat dunia memang begitu,<br>
-        Sebab emas budi terbuang.
+    <!-- SLIDE 5 -->
+    <div class="slide">
+      <div class="blob-layer"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div></div>
+      <div class="watermark">🗡️</div>
+      <div class="content-layer">
+        <div><div class="pill bg-3">Pantun 3</div></div>
+        <div class="pantun-text">
+          Bunga melati bunga di darat,<br>
+          Bunga seroja di tepi kali;<br>
+          Hina besi kerana karat,<br>
+          Hina manusia tidak berbudi.
+        </div>
+        <div class="maksud-label">Maksud:</div>
+        <div class="maksud-box">Pantun ini bermaksud maruah manusia terletak pada budinya. Tanpa sifat budi pekerti dan adab, seseorang akan dipandang hina dan tidak bernilai, sama seperti besi yang buruk kerana berkarat.</div>
       </div>
-      <div class="maksud-label">Maksud:</div>
-      <div class="maksud-box">Pantun ini menegur sikap manusia yang mementingkan kekayaan material. Ia menggambarkan realiti dunia di mana nilai murni dan budi pekerti sering diketepikan atau dilupakan demi mengejar harta dan wang.</div>
     </div>
 
-    <!-- SLIDE 7: PANTUN 5 -->
-    <div class="slide-card">
-      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
-      <div><span class="pill bg-blue">Pantun 5</span></div>
-      <div class="pantun-text">
-        Anak beruk di tepi pantai,<br>
-        Pandai melompat pandai berlari;<br>
-        Biar buruk kain dipakai,<br>
-        Asal hidup pandai berbudi.
+    <!-- SLIDE 6 -->
+    <div class="slide">
+      <div class="blob-layer"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div></div>
+      <div class="watermark">🌿</div>
+      <div class="content-layer">
+        <div><div class="pill bg-4">Pantun 4</div></div>
+        <div class="pantun-text">
+          Bunga cina di atas batu,<br>
+          Jatuh daunnya ke dalam ruang;<br>
+          Adat dunia memang begitu,<br>
+          Sebab emas budi terbuang.
+        </div>
+        <div class="maksud-label">Maksud:</div>
+        <div class="maksud-box">Pantun ini menegur sikap manusia yang mementingkan kekayaan material. Ia menggambarkan realiti dunia di mana nilai murni dan budi pekerti sering diketepikan atau dilupakan demi mengejar harta dan wang.</div>
       </div>
-      <div class="maksud-label">Maksud:</div>
-      <div class="maksud-box">Pantun ini menegaskan bahawa tidak mengapa jika penampilan luaran seseorang tidak mewah atau cantik. Yang paling penting adalah memiliki budi pekerti yang baik, kerana itulah yang akan memuliakan diri seseorang dalam kehidupan.</div>
     </div>
 
-    <!-- SLIDE 8: PANTUN 6 -->
-    <div class="slide-card">
-      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
-      <div><span class="pill bg-purple">Pantun 6</span></div>
-      <div class="pantun-text">
-        Tingkap papan kayu bersegi,<br>
-        Sampan sakat di Pulau Angsa;<br>
-        Indah tampan kerana budi,<br>
-        Tinggi bangsa kerana bahasa.
+    <!-- SLIDE 7 -->
+    <div class="slide">
+      <div class="blob-layer"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div></div>
+      <div class="watermark">🐒</div>
+      <div class="content-layer">
+        <div><div class="pill bg-5">Pantun 5</div></div>
+        <div class="pantun-text">
+          Anak beruk di tepi pantai,<br>
+          Pandai melompat pandai berlari;<br>
+          Biar buruk kain dipakai,<br>
+          Asal hidup pandai berbudi.
+        </div>
+        <div class="maksud-label">Maksud:</div>
+        <div class="maksud-box">Pantun ini menegaskan bahawa tidak mengapa jika penampilan luaran seseorang tidak mewah atau cantik. Yang paling penting adalah memiliki budi pekerti yang baik, kerana itulah yang akan memuliakan diri seseorang dalam kehidupan.</div>
       </div>
-      <div class="maksud-label">Maksud:</div>
-      <div class="maksud-box">Pantun ini bermaksud kecantikan atau kemuliaan peribadi seseorang itu terzahir daripada budi pekerti yang baik, manakala ketinggian martabat dan kebanggaan sesebuah bangsa pula terletak pada bahasanya yang dituturkan dan dipelihara.</div>
     </div>
 
-    <!-- SLIDE 9: PANTUN 7 -->
-    <div class="slide-card">
-      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
-      <div><span class="pill bg-grey">Pantun 7</span></div>
-      <div class="pantun-text">
-        Padang Temu padang baiduri,<br>
-        Tempat raja membangun kota;<br>
-        Bijak bertemu dengan jauhari.<br>
-        Bagai cincin dengan permata.
+    <!-- SLIDE 8 -->
+    <div class="slide">
+      <div class="blob-layer"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div></div>
+      <div class="watermark">🪟</div>
+      <div class="content-layer">
+        <div><div class="pill bg-6">Pantun 6</div></div>
+        <div class="pantun-text">
+          Tingkap papan kayu bersegi,<br>
+          Sampan sakat di Pulau Angsa;<br>
+          Indah tampan kerana budi,<br>
+          Tinggi bangsa kerana bahasa.
+        </div>
+        <div class="maksud-label">Maksud:</div>
+        <div class="maksud-box">Pantun ini bermaksud kecantikan atau kemuliaan peribadi seseorang itu terzahir daripada budi pekerti yang baik, manakala ketinggian martabat dan kebanggaan sesebuah bangsa pula terletak pada bahasanya yang dituturkan dan dipelihara.</div>
       </div>
-      <div class="maksud-label">Maksud:</div>
-      <div class="maksud-box">Pantun ini menggambarkan keserasian yang sempurna. Apabila orang yang bijaksana bertemu dengan pakar yang menghargainya, mereka saling melengkapi dengan indah dan secocok, persis gandingan cincin dengan permata.</div>
     </div>
 
-    <!-- SLIDE 10: ANALISIS -->
-    <div class="slide-card">
-      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
-      <div><span class="pill bg-darkgrey">Analisis Pantun</span></div>
-      
-      <div class="list-title">Tema & Persoalan:</div>
-      <ul class="custom-list">
-        <li>Ketinggian budi bahasa dalam masyarakat.</li>
-        <li>Kepentingan mengenang jasa dan merendah diri.</li>
-      </ul>
-      
-      <hr class="divider">
-      
-      <div class="list-title">Bentuk & Gaya Bahasa:</div>
-      <ul class="custom-list">
-        <li>Bentuk: Pantun 4 kerat, rima a-b-a-b.</li>
-        <li>Imej Alam: Penggunaan unsur air, laut, & bunga.</li>
-        <li>Simile: "Bagai cincin dengan permata."</li>
-      </ul>
-      <div class="subtext">sikit je ni, fakta penting untuk exam!</div>
+    <!-- SLIDE 9 -->
+    <div class="slide">
+      <div class="blob-layer"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div></div>
+      <div class="watermark">💍</div>
+      <div class="content-layer">
+        <div><div class="pill bg-7">Pantun 7</div></div>
+        <div class="pantun-text">
+          Padang Temu padang baiduri,<br>
+          Tempat raja membangun kota;<br>
+          Bijak bertemu dengan jauhari.<br>
+          Bagai cincin dengan permata.
+        </div>
+        <div class="maksud-label">Maksud:</div>
+        <div class="maksud-box">Pantun ini menggambarkan keserasian yang sempurna. Apabila orang yang bijaksana bertemu dengan pakar yang menghargainya, mereka saling melengkapi dengan indah dan secocok, persis gandingan cincin dengan permata.</div>
+      </div>
     </div>
 
-    <!-- SLIDE 11: NILAI & PENGAJARAN -->
-    <div class="slide-card" style="display: flex; flex-direction: column;">
-      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
-      <div><span class="pill bg-darkgrey">Nilai & Pengajaran</span></div>
-      
-      <div class="list-title">Nilai Murni:</div>
-      <ul class="custom-list">
-        <li>Budi Bahasa, Mengenang Jasa, & Kebijaksanaan.</li>
-      </ul>
-      
-      <hr class="divider">
-      
-      <div class="list-title">Pengajaran:</div>
-      <ul class="custom-list">
-        <li>Kita mestilah sentiasa bercakap sopan agar dihormati.</li>
-        <li>Janganlah kita mementingkan harta berbanding adab.</li>
-      </ul>
-
-      <div class="thank-you-box">Sekian, Terima Kasih!</div>
-      <div class="subtext">habis dah, boleh tepuk tangan sekarang.</div>
+    <!-- SLIDE 10 -->
+    <div class="slide">
+      <div class="blob-layer"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div></div>
+      <div class="watermark">🏰</div>
+      <div class="content-layer">
+        <div><div class="pill bg-dark">Analisis Pantun</div></div>
+        
+        <div class="list-title">Tema & Persoalan:</div>
+        <ul class="bullet-list">
+          <li>Ketinggian budi bahasa dalam masyarakat.</li>
+          <li>Kepentingan mengenang jasa dan merendah diri.</li>
+        </ul>
+        
+        <hr class="divider">
+        
+        <div class="list-title">Bentuk & Gaya Bahasa:</div>
+        <ul class="bullet-list">
+          <li>Bentuk: Pantun 4 kerat, rima a-b-a-b.</li>
+          <li>Imej Alam: Penggunaan unsur air, laut, & bunga.</li>
+          <li>Simile: "Bagai cincin dengan permata."</li>
+        </ul>
+        <div class="subtext">sikit je ni, fakta penting untuk exam!</div>
+      </div>
     </div>
 
-    <!-- Controls -->
-    <button class="nav-btn prev" onclick="prevSlide()" aria-label="Previous Slide">
-      <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
-    </button>
-    <button class="nav-btn next" onclick="nextSlide()" aria-label="Next Slide">
-      <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
-    </button>
+    <!-- SLIDE 11 -->
+    <div class="slide">
+      <div class="blob-layer"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div></div>
+      <div class="watermark">🏫</div>
+      <div class="content-layer">
+        <div><div class="pill bg-dark">Nilai & Pengajaran</div></div>
+        
+        <div class="list-title">Nilai Murni:</div>
+        <ul class="bullet-list">
+          <li>Budi Bahasa, Mengenang Jasa, & Kebijaksanaan.</li>
+        </ul>
+        
+        <hr class="divider">
+        
+        <div class="list-title">Pengajaran:</div>
+        <ul class="bullet-list">
+          <li>Kita mestilah sentiasa bercakap sopan agar dihormati.</li>
+          <li>Janganlah kita mementingkan harta berbanding adab.</li>
+        </ul>
+
+        <div class="thank-you">Sekian, Terima Kasih!</div>
+        <div class="subtext">habis dah, boleh tepuk tangan sekarang.</div>
+      </div>
+    </div>
   </div>
 
   <div class="footer">
     Disediakan oleh: Tan Guan Han, Loo Chin Siang, Wee Ker Sheng & Yeow Jia Wei | Kelas: 2H (2 Hijau) | Tahun: 2026
   </div>
 
+  <!-- Interactivity Logic -->
   <script>
-    const slides = document.querySelectorAll('.slide-card');
-    const bodyBg = document.getElementById('body-bg');
+    const slides = document.querySelectorAll('.slide');
     let currentSlide = 0;
-
-    // Array of blurred background representations to perfectly match the presentation vibe
-    const backgrounds =[
-      "url('https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=1000&auto=format&fit=crop')", // Slide 1: Green/Brown (Minecraft)
-      "url('https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=1000&auto=format&fit=crop')", // Slide 2: Green/Brown
-      "url('https://images.unsplash.com/photo-1495908333425-29a1e0918c5f?q=80&w=1000&auto=format&fit=crop')", // Slide 3: Ocean/Boat
-      "url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1000&auto=format&fit=crop')", // Slide 4: Gold/Brown
-      "url('https://images.unsplash.com/photo-1542382156909-9ae37b3f56fd?q=80&w=1000&auto=format&fit=crop')", // Slide 5: Sword/Metal
-      "url('https://images.unsplash.com/photo-1490750967868-88aa4486c946?q=80&w=1000&auto=format&fit=crop')", // Slide 6: White Flowers
-      "url('https://images.unsplash.com/photo-1540206395-68808572332f?q=80&w=1000&auto=format&fit=crop')", // Slide 7: Sand/Nature
-      "url('https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1000&auto=format&fit=crop')", // Slide 8: Architecture
-      "url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1000&auto=format&fit=crop')", // Slide 9: Jewelry
-      "url('https://images.unsplash.com/photo-1557672172-298e090bd0f1?q=80&w=1000&auto=format&fit=crop')", // Slide 10: Abstract
-      "url('https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=1000&auto=format&fit=crop')"  // Slide 11: Green/Brown
-    ];
 
     function updateSlides() {
       slides.forEach((slide, index) => {
         slide.classList.toggle('active', index === currentSlide);
       });
-      bodyBg.style.backgroundImage = backgrounds[currentSlide] || backgrounds[0];
     }
 
-    function nextSlide() { if (currentSlide < slides.length - 1) { currentSlide++; updateSlides(); } }
-    function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlides(); } }
+    function nextSlide() { 
+      if (currentSlide < slides.length - 1) { 
+        currentSlide++; 
+        updateSlides(); 
+      } 
+    }
+    
+    function prevSlide() { 
+      if (currentSlide > 0) { 
+        currentSlide--; 
+        updateSlides(); 
+      } 
+    }
 
-    // Keyboard Nav
+    // Keyboard controls
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
       else if (e.key === 'ArrowLeft') prevSlide();
     });
 
-    // Mobile Swipe Nav
+    // Mobile Swipe controls
     let touchStartX = 0;
     document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, {passive: true});
     document.addEventListener('touchend', e => {
       let touchEndX = e.changedTouches[0].screenX;
-      if (touchEndX < touchStartX - 50) nextSlide();
-      if (touchEndX > touchStartX + 50) prevSlide();
+      if (touchStartX - touchEndX > 50) nextSlide();
+      if (touchEndX - touchStartX > 50) prevSlide();
     }, {passive: true});
   </script>
 </body>
