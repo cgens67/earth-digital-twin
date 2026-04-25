@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Earth Digital Twin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+
+  <!-- Material Design 3 Expressive UI -->
+  <main class="md3-overlay">
+    <div class="md3-card">
+      <div class="header">
+        <h1 class="md3-title">Digital Twin</h1>
+        <p class="md3-body">Zoom natively from orbit to city streets.</p>
+      </div>
+
+      <div class="button-group">
+        <md-filled-button id="btn-space">
+          <md-icon slot="icon">public</md-icon>
+          Outer Space
+        </md-filled-button>
+        <md-filled-button id="btn-ny">
+          <md-icon slot="icon">location_city</md-icon>
+          New York
+        </md-filled-button>
+        <md-filled-button id="btn-kl">
+          <md-icon slot="icon">business</md-icon>
+          Kuala Lumpur
+        </md-filled-button>
+      </div>
+
+      <div class="toggle-group">
+         <span class="md3-body-medium">Enable 3D Buildings</span>
+         <md-switch id="toggle-buildings" selected></md-switch>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
