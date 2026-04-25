@@ -1,18 +1,24 @@
 {
-  "name": "earth-digital-twin",
+  "name": "solar-system-digital-twin",
   "version": "1.0.0",
-  "type": "module",
+  "description": "A fully interactive, true-scale 3D digital twin of the Solar System with gravity simulations.",
+  "main": "index.html",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "@material/web": "^1.1.1",
-    "cesium": "^1.115.0"
+  "repository": {
+    "type": "git",
+    "url": "Your GitHub Repo URL goes here"
   },
-  "devDependencies": {
-    "vite": "^5.2.0",
-    "vite-plugin-cesium": "^1.2.22"
-  }
+  "keywords":[
+    "threejs",
+    "solar-system",
+    "space",
+    "simulation",
+    "digital-twin",
+    "material-design",
+    "vercel"
+  ],
+  "author": "",
+  "license": "MIT"
 }
