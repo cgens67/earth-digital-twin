@@ -1,0 +1,75 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+  background: #000;
+  /* MD3 Variables */
+  --md-sys-color-primary: #825500;
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-primary-container: #FFDDAE;
+  --md-sys-color-on-surface: #201A15;
+}
+
+#cesiumContainer {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.md3-overlay {
+  position: absolute;
+  z-index: 2;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  max-width: 400px;
+}
+
+/* Material Design 3 Expressive Card - heavy blur and huge borders */
+.md3-card {
+  background-color: rgba(255, 248, 244, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--md-sys-color-on-surface);
+  padding: 24px;
+  border-radius: 28px;
+  box-shadow: 0px 8px 16px -2px rgba(0,0,0,0.2), 0px 24px 40px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header { display: flex; flex-direction: column; gap: 4px; }
+.md3-title { margin: 0; font-size: 28px; font-weight: 500; color: #2A1800; }
+.md3-body { margin: 0; font-size: 15px; color: #4A443D; line-height: 20px;}
+
+.button-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Main hero button takes full width */
+#btn-space { grid-column: 1 / -1; --md-sys-color-primary: #123f22; }
+
+.toggle-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Hide default map widgets for mobile aesthetics */
+.cesium-viewer-toolbar, 
+.cesium-viewer-animationContainer,
+.cesium-viewer-timelineContainer,
+.cesium-viewer-fullscreenContainer {
+  display: none !important;
+}
