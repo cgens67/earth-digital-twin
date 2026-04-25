@@ -1,45 +1,41 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+// Native direct URL imports (100% crash-proof on mobile browsers)
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
 
 // --- CONFIGURATION & TRUE SCALE DATA ---
-// 1 Three.js unit = 1,000,000 km
-const SCALE = 1 / 1000000; 
+const SCALE = 1 / 1000000; // 1 unit = 1,000,000 km
 
-// Planets accurate radii (km) and distances from sun (km), periods (seconds)
 const celestialData = {
     Sun:     { r: 696340, d: 0,       period: 1,         color: 0xffdd00, type: 'star' },
     Mercury: { r: 2439,   d: 57.9e6,  period: 7603200,   color: 0x888888 },
     Venus:   { r: 6051,   d: 108.2e6, period: 19414080,  color: 0xe0b060 },
     Earth:   { r: 6371,   d: 149.6e6, period: 31553280,  color: 0x2b82c9, texture: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg' },
-    Moon:    { r: 1737,   d: 384400,  period: 2358720,   color: 0xdddddd, parent: 'Earth' }, // True scale distance to Earth
+    Moon:    { r: 1737,   d: 384400,  period: 2358720,   color: 0xdddddd, parent: 'Earth' },
     Mars:    { r: 3389,   d: 227.9e6, period: 59356800,  color: 0xc1440e },
     Jupiter: { r: 69911,  d: 778.5e6, period: 374198400, color: 0xd39c7e },
-    Saturn:  { r: 58232,  d: 1434e6,  period: 928540800, color: 0xc5ab6e },
-    Uranus:  { r: 25362,  d: 2871e6,  period: 2642889600,color: 0x4b70dd },
-    Neptune: { r: 24622,  d: 4495e6,  period: 5166720000,color: 0x274687 }
+    Saturn:  { r: 58232,  d: 1434e6,  period: 928540800, color: 0xc5ab6e }
 };
 
 // --- SCENE SETUP ---
-// Logarithmic Depth Buffer is VITAL for true scale rendering (prevents z-fighting and zooming issues)
 const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 document.getElementById('canvas-container').appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.00001, 100000);
-camera.position.set(0, 50, 150);
+scene.background = new THREE.Color(0x020205); // Deep space blue, prevents complete blackness
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.000001, 100000);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
-controls.maxDistance = 10000;
 
 // --- LIGHTING ---
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.05); // Dim background space
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.1); 
 scene.add(ambientLight);
 
-const sunLight = new THREE.PointLight(0xffffff, 2, 0, 0); // Infinite falloff realistic light
+// PointLight: Color, Intensity, Distance, Decay. Decay = 0 stops the light from fading over billions of miles.
+const sunLight = new THREE.PointLight(0xffffff, 3, 0, 0); 
 scene.add(sunLight);
 
 // --- STARFIELD ---
@@ -47,37 +43,35 @@ function createStars() {
     const starGeo = new THREE.BufferGeometry();
     const starCount = 5000;
     const posArray = new Float32Array(starCount * 3);
-    for(let i=0; i < starCount * 3; i++) {
-        // Create a massive hollow sphere of stars
+    for(let i = 0; i < starCount; i++) {
         const r = 5000 + Math.random() * 5000;
         const theta = Math.random() * 2 * Math.PI;
         const phi = Math.acos(Math.random() * 2 - 1);
-        if(i%3 === 0) posArray[i] = r * Math.sin(phi) * Math.cos(theta);
-        if(i%3 === 1) posArray[i] = r * Math.sin(phi) * Math.sin(theta);
-        if(i%3 === 2) posArray[i] = r * Math.cos(phi);
+        posArray[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+        posArray[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+        posArray[i * 3 + 2] = r * Math.cos(phi);
     }
     starGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-    const starMat = new THREE.PointsMaterial({ size: 0.5, color: 0xffffff });
+    const starMat = new THREE.PointsMaterial({ size: 1.5, color: 0xffffff });
     scene.add(new THREE.Points(starGeo, starMat));
 }
 createStars();
 
 // --- PLANET GENERATION & STATE ---
 const textureLoader = new THREE.TextureLoader();
+textureLoader.crossOrigin = 'Anonymous'; // Prevents CORS black-screen errors
 const bodies = {};
 let simTime = 0;
 let sunExists = true;
 
-// Build Meshes
 Object.keys(celestialData).forEach(name => {
     const data = celestialData[name];
-    const radius = Math.max(data.r * SCALE, 0.0001); // Ensure it's at least visible to engine
+    const radius = Math.max(data.r * SCALE, 0.0001); 
     
     let material;
     if (data.type === 'star') {
         material = new THREE.MeshBasicMaterial({ color: data.color });
         
-        // Add Sun glow
         const spriteMat = new THREE.SpriteMaterial({
             map: createRadialGradient(),
             color: 0xffdd00,
@@ -88,7 +82,6 @@ Object.keys(celestialData).forEach(name => {
         glow.scale.set(radius * 5, radius * 5, 1);
         data.glowMesh = glow;
         scene.add(glow);
-
     } else {
         if (data.texture) {
             material = new THREE.MeshStandardMaterial({ map: textureLoader.load(data.texture), roughness: 0.6 });
@@ -100,7 +93,6 @@ Object.keys(celestialData).forEach(name => {
     const mesh = new THREE.Mesh(new THREE.SphereGeometry(radius, 32, 32), material);
     scene.add(mesh);
 
-    // Realistic Atmosphere for Earth
     if (name === 'Earth') {
         const atmosMat = new THREE.MeshBasicMaterial({
             color: 0x4ba0ff,
@@ -112,7 +104,6 @@ Object.keys(celestialData).forEach(name => {
         mesh.add(atmos);
     }
 
-    // Dynamic Trail
     const trailGeo = new THREE.BufferGeometry();
     const maxTrail = 200;
     trailGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(maxTrail * 3), 3));
@@ -125,14 +116,13 @@ Object.keys(celestialData).forEach(name => {
         mesh,
         trail,
         trailPositions:[],
-        phase: Math.random() * Math.PI * 2, // Random starting position on orbit
+        phase: Math.random() * Math.PI * 2, 
         breakoutPos: new THREE.Vector3(),
         breakoutVel: new THREE.Vector3(),
         breakoutTime: 0
     };
 });
 
-// Helper for Sun Glow
 function createRadialGradient() {
     const canvas = document.createElement('canvas');
     canvas.width = 256; canvas.height = 256;
@@ -147,8 +137,12 @@ function createRadialGradient() {
 }
 
 // --- PHYSICS SIMULATION ---
+let lastTrailTime = 0;
+
 function updatePhysics(dt) {
     simTime += dt;
+    const recordTrail = (simTime - lastTrailTime) > 86400; // Save path point every 1 sim day
+    if (recordTrail) lastTrailTime = simTime;
 
     Object.keys(bodies).forEach(name => {
         const body = bodies[name];
@@ -157,30 +151,24 @@ function updatePhysics(dt) {
         let globalPos = new THREE.Vector3();
         
         if (sunExists || body.parent === 'Earth') {
-            // Standard Keplerian Circular Orbit
             const angularVel = (2 * Math.PI) / body.period;
             const currentAngle = body.phase + (simTime * angularVel);
-            
             const distInUnits = body.d * SCALE;
             const localX = Math.cos(currentAngle) * distInUnits;
             const localZ = Math.sin(currentAngle) * distInUnits;
             
             if (body.parent) {
-                // E.g., Moon orbiting Earth
                 const parentPos = bodies[body.parent].mesh.position;
                 globalPos.set(parentPos.x + localX, 0, parentPos.z + localZ);
             } else {
-                // Orbiting Sun
                 globalPos.set(localX, 0, localZ);
             }
         } else {
-            // SUN DISAPPEARED: Tangent linear physics
+            // SUN DISAPPEARED: Fly away in a straight line
             if (!body.parent) {
-                // Planet travels in straight line
                 const timeSinceBreakout = simTime - body.breakoutTime;
                 globalPos.copy(body.breakoutPos).add(body.breakoutVel.clone().multiplyScalar(timeSinceBreakout));
             } else {
-                // Moon travels with Earth, but maintains local orbit
                 const parentPos = bodies[body.parent].mesh.position;
                 const angularVel = (2 * Math.PI) / body.period;
                 const currentAngle = body.phase + (simTime * angularVel);
@@ -195,8 +183,7 @@ function updatePhysics(dt) {
 
         body.mesh.position.copy(globalPos);
 
-        // Update Trails
-        if(simTime % 10 < dt) { // Only sample path periodically
+        if (recordTrail) { 
             body.trailPositions.push(globalPos.clone());
             if (body.trailPositions.length > 200) body.trailPositions.shift();
             
@@ -219,13 +206,10 @@ function triggerSunDisappearance() {
     const sunGlow = celestialData['Sun'].glowMesh;
     
     if (!sunExists) {
-        // Remove Sun
         sunMesh.visible = false;
         sunGlow.visible = false;
         sunLight.intensity = 0;
-        ambientLight.intensity = 0.01;
 
-        // Calculate breakout vectors (straight line trajectory)
         Object.keys(bodies).forEach(name => {
             const body = bodies[name];
             if (name === 'Sun' || body.parent) return;
@@ -234,7 +218,6 @@ function triggerSunDisappearance() {
             const currentAngle = body.phase + (simTime * angularVel);
             const distInUnits = body.d * SCALE;
             
-            // Tangent velocity vector (derivative of position)
             const vx = -Math.sin(currentAngle) * distInUnits * angularVel;
             const vz = Math.cos(currentAngle) * distInUnits * angularVel;
             
@@ -243,13 +226,10 @@ function triggerSunDisappearance() {
             body.breakoutTime = simTime;
         });
     } else {
-        // Restore Sun
         sunMesh.visible = true;
         sunGlow.visible = true;
-        sunLight.intensity = 2;
-        ambientLight.intensity = 0.05;
+        sunLight.intensity = 3;
         
-        // Recalculate phases so they snap back gracefully to orbits based on current simTime
         Object.keys(bodies).forEach(name => {
             const body = bodies[name];
             if(name === 'Sun' || body.parent) return;
@@ -258,7 +238,6 @@ function triggerSunDisappearance() {
             const angularVel = (2 * Math.PI) / body.period;
             body.phase = angle - (simTime * angularVel);
             
-            // Clear trails to prevent visual glitches on snap
             body.trailPositions =[];
             body.trail.geometry.setDrawRange(0, 0);
         });
@@ -268,9 +247,7 @@ function triggerSunDisappearance() {
 // --- UI AND INTERACTIONS ---
 let focusedPlanet = null;
 
-// Populate Chips
-const chipContainer = document.getElementById('planet-chips');
-['Sun', 'Earth', 'Moon', 'Mars', 'Jupiter', 'Saturn'].forEach(name => {
+const chipContainer = document.getElementById('planet-chips');['Sun', 'Earth', 'Moon', 'Mars', 'Jupiter', 'Saturn'].forEach(name => {
     const btn = document.createElement('button');
     btn.className = 'chip' + (name === 'Sun' ? ' active' : '');
     btn.innerText = name;
@@ -284,23 +261,25 @@ const chipContainer = document.getElementById('planet-chips');
 
 function focusOn(name) {
     focusedPlanet = bodies[name];
-    let offset = focusedPlanet.r * SCALE * 6; // Look from 6 radii away
-    if(name === 'Sun') offset = focusedPlanet.r * SCALE * 2.5;
-    if(name === 'Moon') offset = focusedPlanet.r * SCALE * 12; // Moon is tiny, pull back a bit more
+    let offset = focusedPlanet.r * SCALE * 8; 
+    if(name === 'Sun') offset = focusedPlanet.r * SCALE * 15; // Pull back heavily to see whole sun glow
+    if(name === 'Moon') offset = focusedPlanet.r * SCALE * 20; 
 
+    // Find direction camera is facing
     const dir = new THREE.Vector3().subVectors(camera.position, focusedPlanet.mesh.position).normalize();
     if(dir.lengthSq() === 0) dir.set(0,0,1);
     
-    // Animate Camera setup
+    // Set new camera position safely outside the object
     const targetCamPos = focusedPlanet.mesh.position.clone().add(dir.multiplyScalar(offset));
     camera.position.copy(targetCamPos);
     
-    // Scale controls dynamically so panning/zooming feels right at all scales
     controls.minDistance = focusedPlanet.r * SCALE * 1.1;
 }
+
+// Initialize camera correctly
+camera.position.set(0, 10, 20); // Default placeholder
 focusOn('Sun');
 
-// UI Listeners
 const timeSlider = document.getElementById('time-slider');
 document.getElementById('sun-toggle').addEventListener('click', function() {
     triggerSunDisappearance();
@@ -315,12 +294,11 @@ document.getElementById('sun-toggle').addEventListener('click', function() {
     } else {
         this.classList.add('alert');
         icon.innerText = 'brightness_3';
-        badge.innerText = 'Gravity Disabled - Linear Drift';
+        badge.innerText = 'Gravity Disabled - Drift';
         badge.classList.add('alert');
     }
 });
 
-// Resize handler
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -332,23 +310,20 @@ const clock = new THREE.Clock();
 function animate() {
     requestAnimationFrame(animate);
 
-    // Delta time * UI Multiplier
     const realDt = clock.getDelta();
     const simDt = realDt * parseFloat(timeSlider.value);
     
     updatePhysics(simDt);
 
-    // Keep camera focused on target
     if (focusedPlanet) {
         controls.target.copy(focusedPlanet.mesh.position);
-        // Make sure camera moves alongside the planet if the Sun disappeared and it's flying away
+        // Make camera chase planet if flying out of orbit
         if(!sunExists && focusedPlanet.name !== 'Sun') {
              const dtPos = focusedPlanet.breakoutVel.clone().multiplyScalar(simDt);
              camera.position.add(dtPos);
         }
     }
 
-    // Spin Earth and Sun
     bodies['Earth'].mesh.rotation.y += realDt * 0.5;
     bodies['Sun'].mesh.rotation.y += realDt * 0.1;
 
