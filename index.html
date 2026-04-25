@@ -10,32 +10,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet" />
     
     <link rel="stylesheet" href="style.css">
-
-    <!-- Import Map for Three.js -->
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-            }
-        }
-    </script>
 </head>
 <body>
     <div id="canvas-container"></div>
 
     <!-- UI Overlay (Material Design 3) -->
     <div class="ui-layer">
-        <header class="top-bar">
-            <h1>Solar System Twin</h1>
-            <span class="subtitle">True Scale Simulation</span>
-        </header>
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <header class="top-bar">
+                <h1>Solar System Twin</h1>
+                <span class="subtitle">True Scale Simulation</span>
+            </header>
 
-        <button class="fab" id="sun-toggle" title="What if the Sun disappeared?">
-            <span class="material-symbols-outlined" id="sun-icon">wb_sunny</span>
-        </button>
-
-        <div class="bottom-sheet">
             <div class="control-header">
                 <h3>Simulation Controls</h3>
                 <span class="status-badge" id="sim-status">Nominal Gravity</span>
@@ -44,7 +32,7 @@
             <div class="slider-container">
                 <div class="slider-label">
                     <span class="material-symbols-outlined">schedule</span>
-                    <span>Time Speed (Realtime -> 1 Month/sec)</span>
+                    <span>Time Speed (1 Month/sec max)</span>
                 </div>
                 <input type="range" id="time-slider" min="1" max="2592000" value="604800">
             </div>
@@ -59,6 +47,12 @@
                 </div>
             </div>
         </div>
+
+        <!-- Floating Action Button -->
+        <button class="fab" id="sun-toggle" title="What if the Sun disappeared?">
+            <span class="material-symbols-outlined" id="sun-icon">wb_sunny</span>
+        </button>
+        
     </div>
 
     <script type="module" src="main.js"></script>
