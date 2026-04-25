@@ -1,7 +1,7 @@
 :root {
     /* MD3 Dark Theme Colors */
-    --md-sys-color-background: #141218;
-    --md-sys-color-surface: rgba(33, 31, 38, 0.85);
+    --md-sys-color-background: #050510;
+    --md-sys-color-surface: rgba(20, 18, 24, 0.75);
     --md-sys-color-surface-variant: #49454F;
     --md-sys-color-on-surface: #E6E1E5;
     --md-sys-color-primary: #D0BCFF;
@@ -30,7 +30,7 @@ body, html {
     height: 100%;
     overflow: hidden;
     font-family: 'Roboto', sans-serif;
-    background-color: #000;
+    background-color: var(--md-sys-color-background);
 }
 
 #canvas-container {
@@ -50,15 +50,34 @@ body, html {
     height: 100%;
     z-index: 2;
     pointer-events: none;
+}
+
+/* Sidebar Layout for Mobile & Desktop */
+.sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 320px;
+    max-width: 85vw; /* Leaves some screen space on small phones */
+    height: 100vh;
+    background-color: var(--md-sys-color-surface);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 0 var(--md-sys-shape-corner-extra-large) var(--md-sys-shape-corner-extra-large) 0;
+    padding: 28px 24px;
+    pointer-events: auto;
+    color: var(--md-sys-color-on-surface);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.4);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 32px;
+    overflow-y: auto;
 }
 
 .top-bar {
-    padding: 24px;
-    color: var(--md-sys-color-on-surface);
-    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .top-bar h1 {
@@ -73,11 +92,11 @@ body, html {
     font-weight: 500;
 }
 
-/* Floating Action Button for Sun Toggle */
+/* Floating Action Button */
 .fab {
     position: absolute;
     right: 24px;
-    bottom: calc(24px + 220px); /* Positioned above bottom sheet */
+    bottom: 24px;
     width: 64px;
     height: 64px;
     border-radius: var(--md-sys-shape-corner-large);
@@ -88,9 +107,10 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
     pointer-events: auto;
+    z-index: 100;
 }
 
 .fab:active {
@@ -102,26 +122,11 @@ body, html {
     color: var(--md-sys-color-on-error);
 }
 
-/* Bottom Sheet Controls */
-.bottom-sheet {
-    background-color: var(--md-sys-color-surface);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: var(--md-sys-shape-corner-extra-large) var(--md-sys-shape-corner-extra-large) 0 0;
-    padding: 24px;
-    padding-bottom: 32px;
-    pointer-events: auto;
-    color: var(--md-sys-color-on-surface);
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
 .control-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
 }
 
 .control-header h3 {
@@ -132,7 +137,7 @@ body, html {
 .status-badge {
     background-color: rgba(208, 188, 255, 0.2);
     color: var(--md-sys-color-primary);
-    padding: 4px 12px;
+    padding: 6px 12px;
     border-radius: var(--md-sys-shape-corner-full);
     font-size: 12px;
     font-weight: 700;
@@ -146,7 +151,7 @@ body, html {
 .slider-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
 }
 
 .slider-label {
@@ -164,7 +169,7 @@ body, html {
 input[type="range"] {
     -webkit-appearance: none;
     width: 100%;
-    height: 48px;
+    height: 36px;
     background: transparent;
     cursor: pointer;
 }
@@ -186,16 +191,16 @@ input[type="range"]::-webkit-slider-thumb {
     box-shadow: 0 0 10px rgba(208, 188, 255, 0.5);
 }
 
-.chip-container {
+.focus-section {
     display: flex;
-    overflow-x: auto;
-    gap: 8px;
-    padding-bottom: 8px;
-    scrollbar-width: none;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.chip-container::-webkit-scrollbar {
-    display: none;
+.chip-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .chip {
@@ -206,7 +211,6 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: 8px;
     font-size: 14px;
     cursor: pointer;
-    white-space: nowrap;
     transition: all 0.2s;
     font-family: 'Roboto', sans-serif;
 }
@@ -215,18 +219,4 @@ input[type="range"]::-webkit-slider-thumb {
     background-color: var(--md-sys-color-primary);
     color: var(--md-sys-color-on-primary);
     border-color: var(--md-sys-color-primary);
-}
-
-@media (min-width: 768px) {
-    .bottom-sheet {
-        position: absolute;
-        bottom: 24px;
-        left: 24px;
-        width: 400px;
-        border-radius: var(--md-sys-shape-corner-extra-large);
-    }
-    .fab {
-        bottom: 24px;
-        right: 24px;
-    }
 }
