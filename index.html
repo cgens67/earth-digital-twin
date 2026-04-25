@@ -4,37 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Pantun Budi - Baik Budi, Indah Bahasa</title>
-  
-  <!-- Exact Fonts & Icons -->
+
+  <!-- Google Fonts for exactly matching the book cover cursive and providing fallback thick sans-serifs -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,700;1,700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,700,1,0" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:ital,wght@0,800;1,800&display=swap" rel="stylesheet">
+  
   <style>
-    /* =====================
-       GLOBAL & EXACT TYPOGRAPHY
-       ===================== */
+    /* =========================================================
+       1. EXACT TYPOGRAPHY & GLOBAL VARIABLES
+       ========================================================= */
     :root {
-      /* Prioritize requested exact fonts */
-      --font-main: "Helvetica Neue", "SF Pro Display", "Inter", Arial, sans-serif;
+      /* Force Helvetica Neue / SF Pro exact rendering */
+      --font-main: "Helvetica Neue", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", "Arial", sans-serif;
+      --font-cursive: "Great Vibes", cursive;
+      
       --color-text-dark: #000000;
-      --color-text-maksud: #555555;
-      
-      /* Mesh Gradient Colors */
-      --mesh-cyan: #c4ede6;
-      --mesh-pink: #f8d5dc;
-      --mesh-yellow: #f8f1ce;
-      --mesh-green: #d1ebd6;
-      
-      /* UI Colors */
-      --pill-green-light: #aef5d5;
+      --color-text-maksud: #666666;
+      --color-card-bg: rgba(245, 249, 248, 0.85);
+
+      /* Exact Pill Colors */
+      --pill-cyan-light: #bdf6e4;
       --pill-dark: #333333;
-      --pill-pink: #eb7c88;
-      --pill-gold: #bba586;
-      --pill-green: #78c879;
-      --pill-cyan: #65d5d6;
-      --pill-blue: #8a8cf3;
+      --pill-pink: #ec7c88;
+      --pill-gold: #b29977;
+      --pill-green: #71c675;
+      --pill-cyan: #69d9d9;
+      --pill-blue: #8688f2;
       --pill-purple: #9c849e;
       --pill-grey: #7a7a7a;
       --pill-darkgrey: #3c3c3c;
@@ -44,7 +40,7 @@
 
     body {
       font-family: var(--font-main);
-      font-weight: 700; /* Forced Bold */
+      font-weight: 800; /* Extra Bold to match the exact thickness of your images */
       color: var(--color-text-dark);
       overflow: hidden;
       display: flex;
@@ -53,93 +49,86 @@
       height: 100vh;
       width: 100vw;
       -webkit-font-smoothing: antialiased;
-      
-      /* Page Background mimicking the blurred Minecraft scene */
-      background: #799a82;
-      background-image: 
-        radial-gradient(circle at 10% 20%, #6ab2b4 0%, transparent 50%),
-        radial-gradient(circle at 90% 10%, #7d5e5f 0%, transparent 40%),
-        radial-gradient(circle at 80% 90%, #58795c 0%, transparent 60%),
-        radial-gradient(circle at 10% 90%, #8ca67a 0%, transparent 50%);
+      -moz-osx-font-smoothing: grayscale;
+      transition: background 0.8s ease;
+      background-size: cover;
+      background-position: center;
     }
 
-    /* =====================
-       CARD & EXACT BACKGROUND SHAPES
-       ===================== */
+    /* Dynamic Background Blur Overlay */
+    .bg-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      z-index: -1;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* =========================================================
+       2. EXACT CARD DESIGN & MESH BLOBS
+       ========================================================= */
     .presentation-wrapper {
       position: relative;
       width: 95vw;
       max-width: 1024px;
       height: 85vh;
-      max-height: 720px;
+      max-height: 768px;
     }
 
     .slide-card {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--color-card-bg);
       border-radius: 48px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15), inset 0 0 0 2px rgba(255,255,255,0.4);
-      padding: clamp(24px, 4vw, 50px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      padding: 40px 50px;
       opacity: 0;
-      transform: scale(0.98) translateX(20px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: scale(0.95);
+      transition: opacity 0.4s ease, transform 0.4s ease;
       pointer-events: none;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.5); /* Base transparency */
     }
 
     .slide-card.active {
       opacity: 1;
-      transform: scale(1) translateX(0);
+      transform: scale(1);
       pointer-events: auto;
     }
 
-    /* Exact Glassmorphism Mesh Blob Shapes */
-    .card-mesh-bg {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      z-index: -2;
-      background: rgba(252, 253, 255, 0.9);
-      overflow: hidden;
-    }
+    /* Exact Internal Pastel Blobs (Mesh Gradient) */
     .blob {
       position: absolute;
       border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.9;
-    }
-    .blob-cyan { background: var(--mesh-cyan); width: 60%; height: 60%; top: -10%; left: -10%; }
-    .blob-yellow { background: var(--mesh-yellow); width: 60%; height: 60%; top: -20%; left: 20%; }
-    .blob-pink { background: var(--mesh-pink); width: 55%; height: 55%; top: -10%; right: -10%; }
-    .blob-green { background: var(--mesh-green); width: 60%; height: 60%; bottom: -10%; right: -10%; }
-    .blob-yellow-bottom { background: var(--mesh-yellow); width: 50%; height: 50%; bottom: -10%; left: -10%; }
-
-    /* Faint Silhouette Watermarks */
-    .watermark {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 350px !important;
-      color: #000;
-      opacity: 0.03;
+      filter: blur(80px);
       z-index: -1;
-      pointer-events: none;
+      opacity: 0.7;
     }
+    .blob-cyan { background: #b2ebf2; width: 600px; height: 600px; top: -200px; left: -150px; }
+    .blob-pink { background: #fce4ec; width: 500px; height: 500px; top: -100px; right: -150px; }
+    .blob-yellow { background: #fff9c4; width: 550px; height: 550px; bottom: -200px; left: 20%; }
+    .blob-green { background: #e8f5e9; width: 600px; height: 600px; bottom: -250px; right: -150px; }
 
-    /* =====================
-       TYPOGRAPHY & COMPONENTS
-       ===================== */
+    /* =========================================================
+       3. EXACT COMPONENTS & TYPOGRAPHY
+       ========================================================= */
     .pill {
       display: inline-block;
-      padding: 10px 24px;
+      padding: 8px 24px;
       border-radius: 9999px;
-      font-size: clamp(1.1rem, 2.2vw, 1.6rem);
-      margin-bottom: 20px;
+      font-size: 1.6rem;
+      margin-bottom: 24px;
       color: white;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      line-height: 1.2;
     }
+
+    .pill-title { font-size: 2.2rem; padding: 12px 40px; margin-bottom: 20px; }
+    .pill-subtitle { font-size: 1.8rem; padding: 14px 48px; font-style: italic; }
     
+    .bg-cyan-light { background-color: var(--pill-cyan-light); color: var(--color-text-dark); }
+    .bg-dark { background-color: var(--pill-dark); color: white; }
     .bg-pink { background-color: var(--pill-pink); }
     .bg-gold { background-color: var(--pill-gold); }
     .bg-green { background-color: var(--pill-green); }
@@ -150,162 +139,193 @@
     .bg-darkgrey { background-color: var(--pill-darkgrey); }
 
     .pantun-text {
-      font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+      font-size: 2.1rem;
       font-style: italic;
-      line-height: 1.6;
+      line-height: 1.5;
       margin-bottom: 24px;
-      letter-spacing: 0.2px;
+      letter-spacing: -0.2px;
     }
 
     .maksud-label {
-      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-size: 1.9rem;
       margin-bottom: 12px;
     }
 
     .maksud-box {
-      background: rgba(255, 255, 255, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      padding: clamp(20px, 4vw, 30px);
-      border-radius: 30px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
-      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      padding: 30px 40px;
+      border-radius: 24px;
+      font-size: 1.45rem;
       font-style: italic;
       color: var(--color-text-maksud);
       text-align: center;
-      line-height: 1.5;
+      line-height: 1.4;
       flex-grow: 1;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* Slide 1 Specifics */
-    .s1-info-container { padding-top: 5%; padding-left: 5%; flex-grow: 1; }
-    .s1-row { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 28px; font-size: clamp(1.3rem, 2.6vw, 2rem); line-height: 1.4; }
-    .s1-badge { background: var(--pill-green-light); padding: 8px 22px; border-radius: 9999px; white-space: nowrap; }
-    
-    .s1-buttons { display: flex; flex-direction: column; align-items: center; gap: 24px; padding-bottom: 5%; }
-    .btn-large-green { background: var(--pill-green-light); padding: 16px 48px; border-radius: 9999px; font-size: clamp(1.6rem, 3vw, 2.4rem); box-shadow: 0 8px 20px rgba(174, 245, 213, 0.4); }
-    .btn-large-dark { background: var(--pill-dark); color: white; padding: 18px 56px; border-radius: 9999px; font-size: clamp(1.4rem, 2.8vw, 2.2rem); font-style: italic; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    /* =========================================================
+       4. SPECIFIC SLIDES
+       ========================================================= */
+    /* Slide 1 Grid layout */
+    .s1-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 20px 24px;
+      align-items: start;
+      margin-top: 40px;
+      margin-left: 20px;
+      margin-bottom: 80px;
+    }
+    .s1-label {
+      background: var(--pill-cyan-light);
+      padding: 6px 20px;
+      border-radius: 9999px;
+      font-size: 1.8rem;
+    }
+    .s1-text {
+      font-size: 2.1rem;
+      line-height: 1.3;
+      letter-spacing: -0.5px;
+      padding-top: 4px;
+    }
+    .s1-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
 
-    /* Exact Book Mockup (Slide 2) */
+    /* Slide 2 Exact Book Mockup */
     .s2-content { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; }
-    .s2-title { font-size: clamp(1.6rem, 3.2vw, 2.5rem); margin-bottom: 30px; line-height: 1.3; max-width: 90%; }
+    .s2-title { font-size: 2.2rem; margin-bottom: 30px; line-height: 1.2; letter-spacing: -0.5px; max-width: 90%; }
     
     .book-mockup {
-      width: clamp(220px, 45vw, 320px);
-      height: clamp(320px, 60vh, 460px);
-      background: linear-gradient(135deg, #f7971e, #ffd200);
-      border-radius: 6px 18px 18px 6px;
-      box-shadow: inset 8px 0 16px rgba(0,0,0,0.15), 10px 15px 30px rgba(0,0,0,0.3);
+      width: 280px;
+      height: 400px;
+      background: linear-gradient(135deg, #f09819 0%, #ffc107 100%);
+      border-radius: 4px 12px 12px 4px;
+      box-shadow: inset 6px 0 12px rgba(0,0,0,0.1), 12px 16px 32px rgba(0,0,0,0.25);
       position: relative;
       overflow: hidden;
       display: flex; flex-direction: column; align-items: center;
-      color: white; border: 1px solid rgba(255,255,255,0.2);
+      color: white;
     }
-    .book-mockup::before { content: ''; position: absolute; top:0; left: 12px; bottom: 0; width: 3px; background: rgba(255,255,255,0.5); z-index: 10; }
-    .book-top-text { font-size: 8px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; margin-top: 25px; z-index: 2; line-height: 1.4; opacity: 0.9; }
-    .book-logo-s { position: absolute; top: 20px; right: 20px; font-size: 24px; font-style: italic; font-weight: 900; background: white; color: #f7971e; width: 30px; height: 30px; line-height: 30px; border-radius: 4px; z-index: 2; }
-    .book-cursive { font-family: 'Dancing Script', cursive; font-size: 3.5rem; line-height: 1.1; margin-top: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); z-index: 2; text-align: center; font-weight: 700; }
-    .book-author { font-size: 10px; font-style: italic; margin-top: 15px; z-index: 2; opacity: 0.8; }
-    .book-mountain { position: absolute; bottom: 0; left: 0; width: 100%; height: 45%; background: linear-gradient(to bottom, #1e3c72, #2a5298); clip-path: polygon(0% 100%, 0% 50%, 15% 35%, 35% 60%, 55% 20%, 75% 50%, 100% 25%, 100% 100%); z-index: 1; }
-    .book-mountain-light { position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: rgba(255,255,255,0.2); clip-path: polygon(0% 100%, 0% 60%, 20% 45%, 40% 70%, 60% 30%, 80% 60%, 100% 35%, 100% 100%); z-index: 1; filter: blur(2px); }
-    .book-sticker { position: absolute; bottom: 20px; right: 15px; background: #e02424; color: white; font-size: 10px; padding: 5px 8px; border-radius: 4px; transform: rotate(-10deg); z-index: 5; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-
-    /* Slides 10 & 11 specifics */
-    .list-title { font-size: clamp(1.4rem, 2.8vw, 2rem); margin-bottom: 12px; }
-    ul.custom-list { list-style: none; padding-left: 35px; margin-bottom: 24px; }
-    ul.custom-list li { position: relative; font-size: clamp(1.2rem, 2.5vw, 1.7rem); font-style: italic; color: var(--color-text-maksud); margin-bottom: 12px; line-height: 1.4; }
-    ul.custom-list li::before { content: '•'; position: absolute; left: -25px; color: var(--color-text-maksud); font-size: 1.5em; line-height: 1; top: -2px; }
-    hr.divider { border: 0; height: 3px; background: #c2c2c2; margin: 15px 0 25px 0; border-radius: 2px; }
-
-    .thank-you-box { background: rgba(255, 255, 255, 0.8); padding: 24px 48px; border-radius: 9999px; font-size: clamp(1.8rem, 3.5vw, 3rem); text-align: center; margin-top: auto; margin-bottom: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); align-self: center; backdrop-filter: blur(10px); }
-
-    /* Decorators */
-    .subtext { position: absolute; bottom: 25px; left: 40px; font-size: clamp(0.75rem, 1.5vw, 0.95rem); font-style: italic; color: #777; z-index: 10; }
+    .book-mockup::before { content: ''; position: absolute; top:0; left: 10px; bottom: 0; width: 2px; background: rgba(255,255,255,0.4); z-index: 10; }
     
-    .footer { position: fixed; bottom: 12px; left: 0; width: 100%; text-align: center; font-size: clamp(0.65rem, 1.2vw, 0.9rem); font-style: italic; color: rgba(0, 0, 0, 0.75); padding: 0 10px; pointer-events: none; z-index: 10; text-shadow: 0px 1px 2px rgba(255,255,255,0.5); }
+    .book-logo-sb { position: absolute; top: 12px; right: 12px; border: 2px solid #e23b24; padding: 2px; width: 35px; height: 35px; z-index: 5; background: white; border-radius: 4px; }
+    .book-logo-sb::after { content: 'S B'; display: block; color: #e23b24; font-size: 14px; font-weight: 900; line-height: 14px; letter-spacing: -1px; margin-top: 1px; }
+    .book-logo-sb::before { content: ''; position: absolute; top: 16px; left: 2px; right: 2px; height: 2px; background: #e23b24; }
+    
+    .book-top-text { font-family: "Arial", sans-serif; font-weight: bold; font-size: 7px; text-transform: uppercase; text-align: center; margin-top: 25px; z-index: 2; line-height: 1.3; letter-spacing: 0px; }
+    .book-cursive { font-family: var(--font-cursive); font-weight: 400; font-size: 3.5rem; line-height: 1; margin-top: 25px; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); z-index: 2; text-align: center; }
+    .book-author { font-size: 9px; font-style: italic; margin-top: 15px; z-index: 2; font-weight: 500; }
+    
+    .book-mountain { position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: #263b65; clip-path: polygon(0% 100%, 0% 50%, 15% 40%, 30% 60%, 50% 25%, 70% 55%, 100% 30%, 100% 100%); z-index: 1; }
+    .book-mountain-light { position: absolute; bottom: 0; left: 0; width: 100%; height: 35%; background: rgba(255,255,255,0.2); clip-path: polygon(0% 100%, 0% 60%, 20% 50%, 40% 70%, 60% 35%, 80% 65%, 100% 40%, 100% 100%); z-index: 1; filter: blur(3px); }
+    
+    .book-logo-kpm { position: absolute; bottom: 15px; left: 15px; z-index: 5; display: flex; align-items: center; gap: 4px; }
+    .book-logo-kpm-icon { width: 20px; height: 20px; background: radial-gradient(circle, #0e1e4a 40%, #c42621 41%); border-radius: 50%; border: 1px solid white;}
+    .book-logo-kpm-text { font-family: "Arial", sans-serif; font-size: 5px; line-height: 1; text-align: left; }
+    .book-arah { position: absolute; bottom: 4px; left: 15px; z-index: 5; font-size: 5px; font-family: "Arial", sans-serif; }
+    
+    .book-sticker { position: absolute; bottom: 15px; right: 10px; background: #ce1f2c; color: white; font-size: 11px; padding: 12px 4px; font-family: "Arial", sans-serif; font-weight: 900; line-height: 1; transform: rotate(-15deg); z-index: 5; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
 
-    /* =====================
-       NAVIGATION 
-       ===================== */
+    /* Lists for Slide 10 & 11 */
+    .list-title { font-size: 1.8rem; margin-bottom: 12px; }
+    ul.custom-list { list-style: none; padding-left: 35px; margin-bottom: 24px; }
+    ul.custom-list li { position: relative; font-size: 1.6rem; font-style: italic; color: var(--color-text-maksud); margin-bottom: 12px; line-height: 1.4; }
+    ul.custom-list li::before { content: '•'; position: absolute; left: -25px; color: var(--color-text-maksud); font-size: 1.2em; top: -2px; }
+    hr.divider { border: 0; height: 3px; background: #b8b8b8; margin: 15px 0 25px 0; border-radius: 2px; }
+
+    .thank-you-box { background: rgba(255, 255, 255, 0.8); padding: 24px 60px; border-radius: 9999px; font-size: 3.2rem; text-align: center; margin-top: auto; margin-bottom: 60px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); align-self: center; }
+
+    /* Exact Subtext & Footers */
+    .subtext { position: absolute; bottom: 25px; left: 45px; font-size: 0.8rem; font-style: italic; color: #777; z-index: 10; font-weight: 800; }
+    .footer { position: fixed; bottom: 8px; left: 0; width: 100%; text-align: center; font-size: 0.85rem; font-style: italic; color: rgba(0, 0, 0, 0.6); padding: 0 10px; pointer-events: none; z-index: 10; font-weight: 800;}
+
+    /* Controls */
     .nav-btn {
       position: absolute; top: 50%; transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.85); border: none;
-      width: 60px; height: 60px; border-radius: 20px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); cursor: pointer;
+      background: rgba(255, 255, 255, 0.8); border: none;
+      width: 50px; height: 50px; border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); cursor: pointer;
       display: flex; justify-content: center; align-items: center; z-index: 20;
-      transition: all 0.2s cubic-bezier(0.2, 1, 0.3, 1);
-      backdrop-filter: blur(12px);
+      transition: all 0.2s;
     }
-    .nav-btn:hover { background: #fff; transform: translateY(-50%) scale(1.08); }
-    .nav-btn:active { transform: translateY(-50%) scale(0.95); }
-    .nav-btn.prev { left: -30px; }
-    .nav-btn.next { right: -30px; }
-    .nav-btn svg { width: 28px; height: 28px; fill: #111; }
+    .nav-btn:hover { background: #fff; transform: translateY(-50%) scale(1.05); }
+    .nav-btn.prev { left: -25px; }
+    .nav-btn.next { right: -25px; }
+    .nav-btn svg { width: 24px; height: 24px; fill: #333; }
 
-    /* Mobile adjustments */
-    @media (max-width: 768px) {
-      .nav-btn { width: 48px; height: 48px; }
-      .nav-btn.prev { left: -10px; }
-      .nav-btn.next { right: -10px; }
-      .s1-row { flex-direction: column; gap: 8px; align-items: flex-start; }
-      .s1-info-container { padding-top: 15px; padding-left: 10px; }
-      .presentation-wrapper { width: 92vw; height: 82vh; }
+    /* Mobile Scaling */
+    @media (max-width: 800px) {
+      html { font-size: 12px; }
+      .slide-card { padding: 30px; }
+      .s1-grid { grid-template-columns: 1fr; gap: 8px; margin-left: 0; }
+      .nav-btn { display: none; } /* Hide on mobile, use swipe */
     }
   </style>
 </head>
-<body>
+<body id="body-bg" style="background-image: url('https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=1000&auto=format&fit=crop');">
+  <div class="bg-overlay"></div>
 
   <div class="presentation-wrapper">
     
-    <!-- SLIDE 1 -->
+    <!-- SLIDE 1: INTRO -->
     <div class="slide-card active">
-      <div class="card-mesh-bg">
-        <div class="blob blob-cyan"></div>
-        <div class="blob blob-yellow"></div>
-        <div class="blob blob-pink"></div>
-        <div class="blob blob-green"></div>
-        <div class="blob blob-yellow-bottom"></div>
-      </div>
+      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
       
-      <div class="s1-info-container">
-        <div class="s1-row"><span class="s1-badge">Nama:</span> <span>Tan Guan Han, Loo Chin Siang,<br>Wee Ker Sheng & Yeow Jia Wei</span></div>
-        <div class="s1-row"><span class="s1-badge">Kelas:</span> <span>2H (2 Hijau)</span></div>
-        <div class="s1-row"><span class="s1-badge">Sekolah:</span> <span>SMJK Katholik</span></div>
+      <div class="s1-grid">
+        <div class="s1-label">Nama:</div>
+        <div class="s1-text">Tan Guan Han, Loo Chin Siang,<br>Wee Ker Sheng & Yeow Jia Wei</div>
+        
+        <div class="s1-label">Kelas:</div>
+        <div class="s1-text">2H (2 Hijau)</div>
+        
+        <div class="s1-label">Sekolah:</div>
+        <div class="s1-text">SMJK Katholik</div>
       </div>
-      <div class="s1-buttons">
-        <div class="btn-large-green">Pantun Budi</div>
-        <div class="btn-large-dark">Baik Budi, Indah Bahasa</div>
+
+      <div class="s1-bottom">
+        <div class="pill bg-cyan-light pill-title">Pantun Budi</div>
+        <div class="pill bg-dark pill-subtitle">Baik Budi, Indah Bahasa</div>
       </div>
     </div>
 
-    <!-- SLIDE 2 -->
+    <!-- SLIDE 2: BOOK COVER -->
     <div class="slide-card">
-      <div class="card-mesh-bg"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div><div class="blob blob-yellow-bottom"></div></div>
+      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
       
       <div class="s2-content">
-        <div class="s2-title">Semua orang! Sila buka buku INI dan lihat halaman sepuluh dan sebelas!</div>
+        <div class="s2-title">Semua orang! Sila buka buku INI dan lihat<br>halaman sepuluh dan sebelas!</div>
+        
         <div class="book-mockup">
-          <div class="book-logo-s">S</div>
+          <div class="book-logo-sb"></div>
           <div class="book-top-text">Antologi Teks Komponen Sastera (Komsas)<br>Dalam Mata Pelajaran Bahasa Melayu<br>Tingkatan 2</div>
           <div class="book-cursive">Baik Budi,<br>Indah Bahasa</div>
           <div class="book-author">disunting oleh<br>Nor Azah Abd Aziz</div>
           <div class="book-mountain-light"></div>
           <div class="book-mountain"></div>
+          
+          <div class="book-logo-kpm">
+            <div class="book-logo-kpm-icon"></div>
+            <div class="book-logo-kpm-text">KEMENTERIAN<br>PENDIDIKAN<br>MALAYSIA</div>
+          </div>
+          <div class="book-arah">ARAH PENDIDIKAN SDN BHD</div>
+          
           <div class="book-sticker">EDISI<br>MURID</div>
         </div>
       </div>
       <div class="subtext">eh, kenapa you tengok sini? open lah!</div>
     </div>
 
-    <!-- SLIDE 3 -->
+    <!-- SLIDE 3: PANTUN 1 -->
     <div class="slide-card">
-      <div class="card-mesh-bg"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div><div class="blob blob-yellow-bottom"></div></div>
-      <span class="material-symbols-rounded watermark">sailing</span>
-      
+      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
       <div><span class="pill bg-pink">Pantun 1</span></div>
       <div class="pantun-text">
         Tenang-tenang air di laut,<br>
@@ -317,11 +337,9 @@
       <div class="maksud-box">Pantun ini bermaksud menghargai jasa dan budi baik seseorang. Kebaikan tersebut sentiasa diingat, disebut-sebut, dan dijunjung tinggi sebagai tanda syukur serta penghormatan yang tidak luput dek zaman.</div>
     </div>
 
-    <!-- SLIDE 4 -->
+    <!-- SLIDE 4: PANTUN 2 -->
     <div class="slide-card">
-      <div class="card-mesh-bg"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div><div class="blob blob-yellow-bottom"></div></div>
-      <span class="material-symbols-rounded watermark">volunteer_activism</span>
-      
+      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
       <div><span class="pill bg-gold">Pantun 2</span></div>
       <div class="pantun-text">
         Yang kurik kundi,<br>
@@ -333,11 +351,9 @@
       <div class="maksud-box">Mutiara kata paling masyhur tentang jati diri masyarakat Melayu. Ia menekankan bahawa kekayaan budi pekerti dan kehalusan bahasa adalah ukuran sebenar nilai serta kemuliaan seseorang, melebihi rupa paras atau harta.</div>
     </div>
 
-    <!-- SLIDE 5 -->
+    <!-- SLIDE 5: PANTUN 3 -->
     <div class="slide-card">
-      <div class="card-mesh-bg"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div><div class="blob blob-yellow-bottom"></div></div>
-      <span class="material-symbols-rounded watermark">swords</span>
-      
+      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
       <div><span class="pill bg-green">Pantun 3</span></div>
       <div class="pantun-text">
         Bunga melati bunga di darat,<br>
@@ -349,11 +365,9 @@
       <div class="maksud-box">Pantun ini bermaksud maruah manusia terletak pada budinya. Tanpa sifat budi pekerti dan adab, seseorang akan dipandang hina dan tidak bernilai, sama seperti besi yang buruk kerana berkarat.</div>
     </div>
 
-    <!-- SLIDE 6 -->
+    <!-- SLIDE 6: PANTUN 4 -->
     <div class="slide-card">
-      <div class="card-mesh-bg"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div><div class="blob blob-yellow-bottom"></div></div>
-      <span class="material-symbols-rounded watermark">local_florist</span>
-      
+      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
       <div><span class="pill bg-cyan">Pantun 4</span></div>
       <div class="pantun-text">
         Bunga cina di atas batu,<br>
@@ -365,11 +379,9 @@
       <div class="maksud-box">Pantun ini menegur sikap manusia yang mementingkan kekayaan material. Ia menggambarkan realiti dunia di mana nilai murni dan budi pekerti sering diketepikan atau dilupakan demi mengejar harta dan wang.</div>
     </div>
 
-    <!-- SLIDE 7 -->
+    <!-- SLIDE 7: PANTUN 5 -->
     <div class="slide-card">
-      <div class="card-mesh-bg"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div><div class="blob blob-yellow-bottom"></div></div>
-      <span class="material-symbols-rounded watermark">nature_people</span>
-      
+      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
       <div><span class="pill bg-blue">Pantun 5</span></div>
       <div class="pantun-text">
         Anak beruk di tepi pantai,<br>
@@ -381,11 +393,9 @@
       <div class="maksud-box">Pantun ini menegaskan bahawa tidak mengapa jika penampilan luaran seseorang tidak mewah atau cantik. Yang paling penting adalah memiliki budi pekerti yang baik, kerana itulah yang akan memuliakan diri seseorang dalam kehidupan.</div>
     </div>
 
-    <!-- SLIDE 8 -->
+    <!-- SLIDE 8: PANTUN 6 -->
     <div class="slide-card">
-      <div class="card-mesh-bg"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div><div class="blob blob-yellow-bottom"></div></div>
-      <span class="material-symbols-rounded watermark">architecture</span>
-      
+      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
       <div><span class="pill bg-purple">Pantun 6</span></div>
       <div class="pantun-text">
         Tingkap papan kayu bersegi,<br>
@@ -397,11 +407,9 @@
       <div class="maksud-box">Pantun ini bermaksud kecantikan atau kemuliaan peribadi seseorang itu terzahir daripada budi pekerti yang baik, manakala ketinggian martabat dan kebanggaan sesebuah bangsa pula terletak pada bahasanya yang dituturkan dan dipelihara.</div>
     </div>
 
-    <!-- SLIDE 9 -->
+    <!-- SLIDE 9: PANTUN 7 -->
     <div class="slide-card">
-      <div class="card-mesh-bg"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div><div class="blob blob-yellow-bottom"></div></div>
-      <span class="material-symbols-rounded watermark">diamond</span>
-      
+      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
       <div><span class="pill bg-grey">Pantun 7</span></div>
       <div class="pantun-text">
         Padang Temu padang baiduri,<br>
@@ -413,11 +421,9 @@
       <div class="maksud-box">Pantun ini menggambarkan keserasian yang sempurna. Apabila orang yang bijaksana bertemu dengan pakar yang menghargainya, mereka saling melengkapi dengan indah dan secocok, persis gandingan cincin dengan permata.</div>
     </div>
 
-    <!-- SLIDE 10 -->
+    <!-- SLIDE 10: ANALISIS -->
     <div class="slide-card">
-      <div class="card-mesh-bg"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div><div class="blob blob-yellow-bottom"></div></div>
-      <span class="material-symbols-rounded watermark">account_balance</span>
-      
+      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
       <div><span class="pill bg-darkgrey">Analisis Pantun</span></div>
       
       <div class="list-title">Tema & Persoalan:</div>
@@ -437,10 +443,9 @@
       <div class="subtext">sikit je ni, fakta penting untuk exam!</div>
     </div>
 
-    <!-- SLIDE 11 -->
+    <!-- SLIDE 11: NILAI & PENGAJARAN -->
     <div class="slide-card" style="display: flex; flex-direction: column;">
-      <div class="card-mesh-bg"><div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div><div class="blob blob-yellow-bottom"></div></div>
-      
+      <div class="blob blob-cyan"></div><div class="blob blob-yellow"></div><div class="blob blob-pink"></div><div class="blob blob-green"></div>
       <div><span class="pill bg-darkgrey">Nilai & Pengajaran</span></div>
       
       <div class="list-title">Nilai Murni:</div>
@@ -475,22 +480,41 @@
 
   <script>
     const slides = document.querySelectorAll('.slide-card');
+    const bodyBg = document.getElementById('body-bg');
     let currentSlide = 0;
+
+    // Array of blurred background representations to perfectly match the presentation vibe
+    const backgrounds =[
+      "url('https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=1000&auto=format&fit=crop')", // Slide 1: Green/Brown (Minecraft)
+      "url('https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=1000&auto=format&fit=crop')", // Slide 2: Green/Brown
+      "url('https://images.unsplash.com/photo-1495908333425-29a1e0918c5f?q=80&w=1000&auto=format&fit=crop')", // Slide 3: Ocean/Boat
+      "url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1000&auto=format&fit=crop')", // Slide 4: Gold/Brown
+      "url('https://images.unsplash.com/photo-1542382156909-9ae37b3f56fd?q=80&w=1000&auto=format&fit=crop')", // Slide 5: Sword/Metal
+      "url('https://images.unsplash.com/photo-1490750967868-88aa4486c946?q=80&w=1000&auto=format&fit=crop')", // Slide 6: White Flowers
+      "url('https://images.unsplash.com/photo-1540206395-68808572332f?q=80&w=1000&auto=format&fit=crop')", // Slide 7: Sand/Nature
+      "url('https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1000&auto=format&fit=crop')", // Slide 8: Architecture
+      "url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1000&auto=format&fit=crop')", // Slide 9: Jewelry
+      "url('https://images.unsplash.com/photo-1557672172-298e090bd0f1?q=80&w=1000&auto=format&fit=crop')", // Slide 10: Abstract
+      "url('https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=1000&auto=format&fit=crop')"  // Slide 11: Green/Brown
+    ];
 
     function updateSlides() {
       slides.forEach((slide, index) => {
         slide.classList.toggle('active', index === currentSlide);
       });
+      bodyBg.style.backgroundImage = backgrounds[currentSlide] || backgrounds[0];
     }
 
     function nextSlide() { if (currentSlide < slides.length - 1) { currentSlide++; updateSlides(); } }
     function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlides(); } }
 
+    // Keyboard Nav
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
       else if (e.key === 'ArrowLeft') prevSlide();
     });
 
+    // Mobile Swipe Nav
     let touchStartX = 0;
     document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, {passive: true});
     document.addEventListener('touchend', e => {
