@@ -1,46 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Earth Digital Twin</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
-  <link rel="stylesheet" href="./style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Solar System Digital Twin</title>
+    
+    <!-- Material Design Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Import Map for Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
 </head>
 <body>
-  <div id="cesiumContainer"></div>
+    <div id="canvas-container"></div>
 
-  <!-- Material Design 3 Expressive UI -->
-  <main class="md3-overlay">
-    <div class="md3-card">
-      <div class="header">
-        <h1 class="md3-title">Digital Twin</h1>
-        <p class="md3-body">Zoom natively from orbit to city streets.</p>
-      </div>
+    <!-- UI Overlay (Material Design 3) -->
+    <div class="ui-layer">
+        <header class="top-bar">
+            <h1>Solar System Twin</h1>
+            <span class="subtitle">True Scale Simulation</span>
+        </header>
 
-      <div class="button-group">
-        <md-filled-button id="btn-space">
-          <md-icon slot="icon">public</md-icon>
-          Outer Space
-        </md-filled-button>
-        <md-filled-button id="btn-ny">
-          <md-icon slot="icon">location_city</md-icon>
-          New York
-        </md-filled-button>
-        <md-filled-button id="btn-kl">
-          <md-icon slot="icon">business</md-icon>
-          Kuala Lumpur
-        </md-filled-button>
-      </div>
+        <button class="fab" id="sun-toggle" title="What if the Sun disappeared?">
+            <span class="material-symbols-outlined" id="sun-icon">wb_sunny</span>
+        </button>
 
-      <div class="toggle-group">
-         <span class="md3-body-medium">Enable 3D Buildings</span>
-         <md-switch id="toggle-buildings" selected></md-switch>
-      </div>
+        <div class="bottom-sheet">
+            <div class="control-header">
+                <h3>Simulation Controls</h3>
+                <span class="status-badge" id="sim-status">Nominal Gravity</span>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span class="material-symbols-outlined">schedule</span>
+                    <span>Time Speed (Realtime -> 1 Month/sec)</span>
+                </div>
+                <input type="range" id="time-slider" min="1" max="2592000" value="604800">
+            </div>
+
+            <div class="focus-section">
+                <div class="slider-label">
+                    <span class="material-symbols-outlined">my_location</span>
+                    <span>Focus Camera</span>
+                </div>
+                <div class="chip-container" id="planet-chips">
+                    <!-- Chips generated via JS -->
+                </div>
+            </div>
+        </div>
     </div>
-  </main>
 
-  <script type="module" src="./main.js"></script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
